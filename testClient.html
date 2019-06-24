@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="app">
+  
+        
+
+        <ul id="v-for-object" class="demo">
+          <li v-for="value in list">
+            {{ value.model }}
+          </li>
+        </ul>
+
+
+      </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <script>
+    new Vue({
+  el: '#app',
+  data() {
+    return {
+      info: null,
+      list: null,
+      test: 'test'
+    };
+  },
+  mounted() {
+    
+
+    $.ajax({
+      url: 'http://tc.geeksforless.net/~user11/REST/Server/api/ShowCars/',
+      type: 'GET',
+      success: function(result) {
+        list = result[0];
+        console.log(JSON.parse(list));
+        //console.log(list);
+          // Do something with the result
+      }
+    });
+
+
+  }
+})
+    </script>
+
+</body>
+</html>
