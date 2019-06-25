@@ -7,54 +7,117 @@
     <title>Document</title>
 </head>
 <body>
-    
-    <div id="app">
-  
-        
+    <style>
+        .cars-list .car {
+            width: 300px;
+            float: left;
+            border: 1px solid lightgray;
+            border-radius: 5px;
+			box-shadow:2px 3px 5px #ccc;
+            padding: 2px;
+            margin: 5px 2px;
+        }
 
-        <ul id="v-for-object" class="demo">
-          <li v-for="value in list">
-            {{ value.model }}
-          </li>
-        </ul>
+        .cars-list .car > h3{
+            margin-top: 0;
+			color:#777;
+            text-transform: capitalize;
+            text-align: center;
+			text-shadow: 0px  -1px 1px #008, 0px 1px 1px #000;
+        }
+		.cars-list .car > h4{
+            margin-top: 0;
+			color:gray;
+            text-transform: capitalize;
+            text-align: center;
+        }
+		.cars-list .car > .price{
+            margin-top: 0;
+			color:#ba0;
+            text-transform: capitalize;
+            text-align: center;
+        }
 
+        .cars-list::after {
+            clear: both;
+        }
 
-      </div>
+        .cars-list::after,
+        .cars-list::before{
+            content: " ";
+            display: table;
+        }
+    </style>
+    <h1>Cars Shop Client</h1>
+	
+    <div class="cars-list" id="cars"></div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
-    <script>
-    new Vue({
-  el: '#app',
-  data() {
-    return {
-      info: null,
-      list: null,
-      test: 'test'
-    };
-  },
-  mounted() {
-    
-
-    $.ajax({
-      url: 'http://tc.geeksforless.net/~user11/REST/Server/api/ShowCars/',
-      type: 'GET',
-      success: function(result) {
-        list = result[0];
-        console.log(JSON.parse(list));
-        //console.log(list);
-          // Do something with the result
-      }
-    });
-
-
-  }
-})
+	
+    <script type="text/template" id="template_cars">
+        <div class="car">
+            <h3 class="js_car_model"></h3>
+			<h4 class="js_car_year"></h4>
+			<span class="js_car_price price"></span>
+        </div>
     </script>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	
+    <script>
+        (function($){
+            var $cars = $('#cars');
+            var template_car = $('#template_cars').text();
 
+            function buildCars(cars) {
+                $(cars).each(function(index, val) {
+                    var $car = $(template_car);
+                    $car.find('.js_car_model').text(val.model);
+					$car.find('.js_car_year').text(val.year);
+					$car.find('.js_car_price').text(val.price+'$');
+                    $car.appendTo($cars);
+                });
+            }
+
+
+            $.ajax({
+                url: 'http://127.0.0.1/REST/Server/api/ShowCars/',
+                method: 'GET',
+                data: {
+                    results: 50,
+                    seed: 'test'
+                },
+                success: function(data) {
+                    console.log('Status OK');
+                    buildCars(data);
+					console.log(data);
+                },
+                error: function(e) {
+                    console.log('ajax error', e);
+                },
+                complete: function() {
+                    console.log('allways runned')
+                }
+            })
+
+            /* var jqxhr = $.getJSON('https://randomuser.me/api/?results=50', function(data) {
+                buildUsers(data.results);
+            }).done(function() {
+                console.log( "second success" );
+            })
+            .fail(function() {
+                console.log( "error" );
+            })
+            .always(function() {
+                console.log( "complete" );
+            });
+
+
+            jqxhr.complete(function() {
+                console.log( "second complete" );
+            }); */
+
+
+        }(jQuery))
+    </script>
 </body>
 </html>
