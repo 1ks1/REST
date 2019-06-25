@@ -49,28 +49,49 @@
         }
     </style>
     <h1>Cars Shop Client</h1>
-	
+    
+    <!-- registration-->
+<div class="form-user-registration">
+    <span>register</span>
+    <form action="" id="registration-form">
+    <input type="text" name="firstname" placeholder="firstname"><br />
+    <input type="text" name="lastname" placeholder="lastname"><br />
+    <input type="text" name="email" placeholder="email"><br />
+    <input type="text" name="password" placeholder="password"><br />
+    <input type="text" name="confirmpassword" placeholder="confirm password"><br />
+    <button name="sendLogin" id="btn">SEND</button>
+    </form>
+    <div id="result_form"></div>
+
+</div>
+
+
+
     <div class="cars-list" id="cars"></div>
 
-	
+
+
+
     <script type="text/template" id="template_cars">
+	
         <div class="car">
             <h3 class="js_car_model"></h3>
 			<h4 class="js_car_year"></h4>
 			<span class="js_car_price price"></span>
+			
         </div>
+	
     </script>
-	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	
     <script>
         (function($){
             var $cars = $('#cars');
-            var template_car = $('#template_cars').text();
+            var template_cars = $('#template_cars').text();
 
-            function buildCars(cars) {
-                $(cars).each(function(index, val) {
-                    var $car = $(template_car);
+            function buildCars(data) {
+                $(data).each(function(index, val) {
+                    var $car = $(template_cars);
+					//console.log(val);
                     $car.find('.js_car_model').text(val.model);
 					$car.find('.js_car_year').text(val.year);
 					$car.find('.js_car_price').text(val.price+'$');
@@ -80,16 +101,15 @@
 
 
             $.ajax({
-                url: 'http://127.0.0.1/REST/Server/api/ShowCars/',
+                url: 'http://tc.geeksforless.net/~user11/REST/Server/api/ShowCars/',
                 method: 'GET',
                 data: {
                     results: 50,
                     seed: 'test'
                 },
                 success: function(data) {
-                    console.log('Status OK');
                     buildCars(data);
-					console.log(data);
+					//console.log(data);
                 },
                 error: function(e) {
                     console.log('ajax error', e);
@@ -99,25 +119,35 @@
                 }
             })
 
-            /* var jqxhr = $.getJSON('https://randomuser.me/api/?results=50', function(data) {
-                buildUsers(data.results);
-            }).done(function() {
-                console.log( "second success" );
-            })
-            .fail(function() {
-                console.log( "error" );
-            })
-            .always(function() {
-                console.log( "complete" );
-            });
-
-
-            jqxhr.complete(function() {
-                console.log( "second complete" );
-            }); */
-
-
         }(jQuery))
+
+
+        $( document ).ready(function() {
+            $("#btn").click(
+                function(){
+                    sendAjaxForm('result_form', 'registration-form', 'http://tc.geeksforless.net/~user11/REST/Server/api/ShowCars/');
+                    return false; 
+                }
+            );
+        });
+
+        function sendAjaxForm(result_form, registration-form, url) {
+            
+            $.ajax({
+                url:     url, //url страницы 
+                type:     "POST", //метод отправки
+                dataType: "html", //формат данных
+                data: $("#"+registration-form).serialize(),  // Сеарилизуем объект
+                success: function(response) { //Данные отправлены успешно
+                    result = $.parseJSON(response);
+                    console.log(result);
+                    //$('#result_form').html('Имя: '+result.name+'<br>Телефон: '+result.phonenumber);
+                },
+                error: function(response) { // Данные не отправлены
+                    $('#result_form').html('Ошибка. Данные не отправлены.');
+                }
+            });
+        }
     </script>
 </body>
 </html>
